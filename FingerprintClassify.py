@@ -12,27 +12,23 @@ for r, d, f in os.walk(path):
     for file in f:
         if '.png' in file:
             pngfiles.append(os.path.join(r, file))
-#for f in pngfiles:
-#    print(f)
 txtfiles = []
 for r, d, f in os.walk(path):
     for file in f:
         if '.txt' in file:
             txtfiles.append(os.path.join(r, file))
-#for f in txtfiles:
-#    print(f)
 mylines = []
+metaDataList = []
 txtfiles_length = len(txtfiles)
 for i in range(txtfiles_length):
     with open(txtfiles[i], 'rt') as myfile:
         for myline in myfile:
             mylines.append(myline.rstrip('\n'))
-    metaDataList = [fingerMetadata(mylines[0][8:9], mylines[1][7:9], mylines[2][9:33])]
-print(mylines)
+        metaDataLine = fingerMetadata(mylines[0][8:9], mylines[1][7:9], mylines[2][9:33])
+        metaDataList.append(metaDataLine)
+        mylines.clear()
 
 dactList = []
-for onePic in pngfiles:
-    nFinger = Finger(onePic, mylines[0][8:9], mylines[1][7:9], [2][9:33])
+for idx, onePic in enumerate(pngfiles):
+    nFinger = Finger(onePic, metaDataList[idx].gender, metaDataList[idx].typeclass, metaDataList[idx].history)
     dactList.append(nFinger)
-
-print("End")
