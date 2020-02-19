@@ -1,9 +1,16 @@
 from matplotlib import pyplot
 from matplotlib.image import imread
 import os
+from os import listdir, makedirs
 import finger
 from finger import Finger
 from finger import fingerMetadata
+from numpy import load
+from numpy import asarray
+from keras.preprocessing.image import load_img
+from keras.preprocessing.image import img_to_array
+from random import random, seed
+from shutil import copyfile
 
 path = 'C:/FingerprintCNN/Datasets/NISTDB4/NISTSpecialDatabase4GrayScaleImagesofFIGS/sd04/png_txt/'
 
@@ -27,8 +34,38 @@ for i in range(txtfiles_length):
         metaDataLine = fingerMetadata(mylines[0][8:9], mylines[1][7:9], mylines[2][9:33])
         metaDataList.append(metaDataLine)
         mylines.clear()
-
 dactList = []
 for idx, onePic in enumerate(pngfiles):
     nFinger = Finger(onePic, metaDataList[idx].gender, metaDataList[idx].typeclass, metaDataList[idx].history)
     dactList.append(nFinger)
+
+# for i in range(9):
+#     pyplot.subplot(330 + 1 + i)
+#     filename = dactList[i].pic
+#     image = imread(filename)
+#     pyplot.imshow(image)
+# pyplot.show()
+
+# script to create test and train subdirectories with copies from dataset for the flow_from_directory API
+dataset_home = 'API_dataset_NISTDB4/'
+subdirs = ['train/', 'test/']
+for subdir in subdirs:
+    labeldirs = ['A', 'L', 'R', 'T', 'W']
+    for labldir in labeldirs:
+        newdir = dataset_home + subdir + labldir
+        makedirs(newdir, exist_ok=True)
+
+seed(1)
+val_ratio = 0.25
+for file in listdir(path):
+    src = path + '/' + file
+    dst_dir = 'train/'
+    if random() < val_ratio:
+        dst_dir = 'test/'
+    if file.startswith("cat"):
+        dst = dataset_home + dst_dir + 'cats/' + file
+        copyfile(src, dst)
+    elif file.startswith('dog'):
+        dst = dataset_home + dst_dir + 'dogs/' + file
+        copyfile(src, dst)
+
