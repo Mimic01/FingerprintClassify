@@ -57,36 +57,42 @@ for subdir in subdirs:
 
 seed(1)
 val_ratio = 0.25
+adv = 0
 for file in pngfiles:
     src = file
     pngFileName = file[97:109]
     dst_dir = 'train/'
     if random() < val_ratio:
         dst_dir = 'test/'
-    for dact in dactList:
+    for dact in dactList[adv:]:
         if dact.typeclass == 'A':
             dst = dataset_home + dst_dir + 'A/' + pngFileName
-            print("Copying {0} to {1}/A/ directory... ", pngFileName, dst_dir)
+            print("Copying {} to {} /A/ directory... ".format(pngFileName, dst_dir))
             copyfile(src, dst)
+            adv += 1
             break
         elif dact.typeclass == 'L':
             dst = dataset_home + dst_dir + 'L/' + pngFileName
-            print("Copying {0} to {1}/L/ directory... ", pngFileName, dst_dir)
+            print("Copying {} to {}/L/ directory... ".format(pngFileName, dst_dir))
             copyfile(src, dst)
+            adv += 1
             break
         elif dact.typeclass == 'R':
             dst = dataset_home + dst_dir + 'R/' + pngFileName
-            print("Copying {0} to {1}/R/ directory... ", pngFileName, dst_dir)
+            print("Copying {} to {}/R/ directory... ".format(pngFileName, dst_dir))
             copyfile(src, dst)
+            adv += 1
             break
         elif dact.typeclass == 'T':
             dst = dataset_home + dst_dir + 'T/' + pngFileName
-            print("Copying {0} to {1}/T/ directory... ", pngFileName, dst_dir)
+            print("Copying {} to {}/T/ directory... ".format(pngFileName, dst_dir))
             copyfile(src, dst)
+            adv += 1
             break
         elif dact.typeclass == 'W':
             dst = dataset_home + dst_dir + 'W/' + pngFileName
-            print("Copying {0} to {1}/W/ directory... ", pngFileName, dst_dir)
+            print("Copying {} to {}/W/ directory... ".format(pngFileName, dst_dir))
             copyfile(src, dst)
+            adv += 1
             break
 
