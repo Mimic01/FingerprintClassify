@@ -130,15 +130,15 @@ def summarize_diagnostics(history):
     pyplot.savefig(filename + '_plot.png')
     pyplot.close()
 
-    def run_test_harness():
-        model = define_model()
-        datagen = ImageDataGenerator(rescale=1.0/255)
-        train_it = datagen.flow_from_directory('C:/FingerprintCNN/API_dataset_NISTDB4/train', class_mode='categorical', batch_size=64, target_size=(512, 512))
-        test_it = datagen.flow_from_directory('C:/FingerprintCNN/API_dataset_NISTDB4/test', class_mode='categorical', batch_size=64, target_size=(512, 512))
-        history = model.fit_generator(train_it, steps_per_epoch=len(train_it), validation_data=test_it, validation_steps=len(test_it), epochs=20, verbose=0)
-        _, acc = model.evaluate_generator(test_it, steps=len(test_it), verbose=0)
-        print('> %.3f' % (acc * 100.0))
-        summarize_diagnostics(history)
+def run_test_harness():
+    model = define_model()
+    datagen = ImageDataGenerator(rescale=1.0/255)
+    train_it = datagen.flow_from_directory('C:/FingerprintCNN/API_dataset_NISTDB4/train', class_mode='categorical', batch_size=64, target_size=(512, 512))
+    test_it = datagen.flow_from_directory('C:/FingerprintCNN/API_dataset_NISTDB4/test', class_mode='categorical', batch_size=64, target_size=(512, 512))
+    history = model.fit_generator(train_it, steps_per_epoch=len(train_it), validation_data=test_it, validation_steps=len(test_it), epochs=20, verbose=0)
+    _, acc = model.evaluate_generator(test_it, steps=len(test_it), verbose=0)
+    print('> %.3f' % (acc * 100.0))
+    summarize_diagnostics(history)
         
-    run_test_harness()
+run_test_harness()
             
