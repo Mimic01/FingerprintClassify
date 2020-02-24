@@ -57,13 +57,13 @@ for idx, onePic in enumerate(pngfiles):
 # pyplot.show()
 
 # script to create test and train subdirectories with copies from dataset for the flow_from_directory API
-dataset_home = 'C:/FingerprintCNN/API_dataset_NISTDB4/'
-subdirs = ['train/', 'test/']
-for subdir in subdirs:
-    labeldirs = ['A', 'L', 'R', 'T', 'W']
-    for labldir in labeldirs:
-        newdir = dataset_home + subdir + labldir
-        makedirs(newdir, exist_ok=True)
+# dataset_home = 'C:/FingerprintCNN/API_dataset_NISTDB4/'
+# subdirs = ['train/', 'test/']
+# for subdir in subdirs:
+#     labeldirs = ['A', 'L', 'R', 'T', 'W']
+#     for labldir in labeldirs:
+#         newdir = dataset_home + subdir + labldir
+#         makedirs(newdir, exist_ok=True)
 
 # seed(1)
 # val_ratio = 0.25
@@ -113,9 +113,9 @@ def define_model():
     model.add(MaxPooling2D(2, 2))
     model.add(Flatten())
     model.add(Dense(128, activation='relu', kernel_initializer='he_uniform'))
-    model.add(Dense(1, activation='sigmoid'))
+    model.add(Dense(5, activation='softmax'))
     opt = SGD(lr=0.001, momentum=0.9)
-    model.compile(optimizer=opt, loss='binary_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 def summarize_diagnostics(history):
     pyplot.subplot(211)
@@ -133,8 +133,8 @@ def summarize_diagnostics(history):
     def run_test_harness():
         model = define_model()
         datagen = ImageDataGenerator(rescale=1.0/255)
-        train_it = datagen.flow_from_directory('urlToTrain', class_mode='categorical', batch_size=64, target_size=(512, 512))
-        test_it = datagen.flow_from_directory('urlToTest', class_mode='categorial', batch_size=64, target_size=(512, 512))
+        train_it = datagen.flow_from_directory('C:/FingerprintCNN/API_dataset_NISTDB4/train', class_mode='categorical', batch_size=64, target_size=(512, 512))
+        test_it = datagen.flow_from_directory('C:/FingerprintCNN/API_dataset_NISTDB4/test', class_mode='categorical', batch_size=64, target_size=(512, 512))
         history = model.fit_generator(train_it, steps_per_epoch=len(train_it), validation_data=test_it, validation_steps=len(test_it), epochs=20, verbose=0)
         _, acc = model.evaluate_generator(test_it, steps=len(test_it), verbose=0)
         print('> %.3f' % (acc * 100.0))
